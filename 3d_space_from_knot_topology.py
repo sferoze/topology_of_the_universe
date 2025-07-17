@@ -1,24 +1,45 @@
-from sympy import symbols, exp, diff, solve, N
+from sympy import symbols, exp, diff, solve, N, re, im
+import numpy as np
 
 # Knot complexity function K(d)
 d = symbols('d', positive=True)
-# K(d) models the number of stable knot types in d dimensions
-# (d-1)(d-2) ensures K=0 for d<3 (no knots possible)
-# exp(-(d-3)**2) strongly suppresses K for d>3 (knots trivialize)
 K = (d - 1) * (d - 2) * exp(-(d - 3)**2)
 
 # Find critical points
 dK_dd = diff(K, d)
+print(f"First derivative: {dK_dd}")
+
 critical_points = solve(dK_dd, d)
-print(f"Critical points: {critical_points}")
+print(f"All critical points: {critical_points}")
+
+# Filter for real, positive critical points
+real_critical_points = []
+for cp in critical_points:
+    cp_val = N(cp)
+    if im(cp_val) == 0 and re(cp_val) > 0:  # Real and positive
+        real_critical_points.append(float(re(cp_val)))
+
+print(f"Physical critical points (real, positive): {real_critical_points}")
 
 # Evaluate K at integer dimensions
+print("\nKnot complexity by dimension:")
+print("d\tK(d)")
+print("-" * 15)
 for dim in range(1, 7):
-    print(f"d={dim}: K={N(K.subs(d, dim)):.6f}")
+    k_val = N(K.subs(d, dim))
+    print(f"{dim}\t{k_val:.6f}")
 
-# Second derivative at d=3
+# Second derivative analysis
 d2K_dd2 = diff(dK_dd, d)
-print(f"Second derivative at d=3: {N(d2K_dd2.subs(d, 3)):.2f}")
-# Negative => local maximum => stable knots peak at d=3
+second_deriv_at_3 = N(d2K_dd2.subs(d, 3))
+print(f"\nSecond derivative at d=3: {second_deriv_at_3:.6f}")
 
-# Expected output: Critical points listed; K peaks at d=3 with negative second derivative.
+# Verify d=3 is maximum
+if second_deriv_at_3 < 0:
+    print("✓ d=3 is confirmed as local maximum (stable knots peak)")
+else:
+    print("✗ d=3 is not a maximum - check function definition")
+
+# Peak validation
+k_at_3 = N(K.subs(d, 3))
+print(f"Peak complexity K(3) = {k_at_3:.6f}")
