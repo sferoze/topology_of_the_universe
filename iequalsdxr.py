@@ -72,7 +72,7 @@ def derive_minimal_knot(plot=True):
     if plot:
         x_vals = np.linspace(1, 5, 100)
         stability = x_vals - 1 - np.log(2 * x_vals)
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(8, 6), constrained_layout=True)  # Added constrained_layout=True
         plt.plot(x_vals, stability, 'b-', linewidth=2, label='(n-1) - ln(2n)')
         plt.axhline(0, color='r', linestyle='--', alpha=0.7, label='Stability threshold')
         plt.axvline(n_exact, color='orange', linestyle=':', label=f'Exact: n={n_exact:.3f}')
@@ -84,10 +84,10 @@ def derive_minimal_knot(plot=True):
         plt.ylabel('Stability Metric', fontsize=12)
         plt.legend()
         plt.grid(True, alpha=0.3)
-        plt.tight_layout()
+        # plt.tight_layout()  # Remove this line
         plt.savefig('framework_plots/knot_stability.png', dpi=150)
         plt.close()
-    
+
     return n_min, I_knot
 
 # Derive minimal knot
@@ -225,8 +225,8 @@ print(f"Uncertainty: ΔxΔp = {Delta_x * Delta_p:.1f} ≥ h/2 = {h_natural/2:.1f
 # Create comprehensive visualizations with creative heatmap
 def plot_complete_framework():
     """Create the ultimate visualization of the framework, with ratio heatmap."""
-    fig = plt.figure(figsize=(16, 12))
-    gs = fig.add_gridspec(3, 3, hspace=0.3, wspace=0.3)
+    fig = plt.figure(figsize=(16, 12), constrained_layout=True)
+    gs = fig.add_gridspec(3, 3)
     
     # 1. I = c spectrum
     ax1 = fig.add_subplot(gs[0, :2])
@@ -346,7 +346,6 @@ def plot_complete_framework():
     
     plt.suptitle('The Complete Unified Framework: From I = D × R to All Physics', 
                  fontsize=18, weight='bold')
-    plt.tight_layout()
     plt.savefig('framework_plots/complete_framework.png', dpi=150, bbox_inches='tight')
     plt.close()
 
