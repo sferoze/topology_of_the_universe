@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from sympy import symbols, pi, sqrt, ln, exp, solve, diff, N, simplify, integrate, Rational, Eq, nsolve
+from sympy import symbols, pi, sqrt, ln, exp, solve, diff, N, simplify, integrate, Rational, Eq, nsolve, LambertW
 from scipy.optimize import fsolve, minimize_scalar
 import os
 
@@ -32,15 +32,28 @@ def derive_minimal_knot(plot=True):
         except:
             continue
     
-    # Symbolic fallback if numerical fails
+    # Symbolic fallback using Lambert W for true symbolic solution
     if n_exact is None:
-        print("Numerical solve failed; using symbolic solver.")
+        print("Numerical solve failed; using symbolic Lambert W solution.")
+        # Equation: n - 1 = ln(2n)
+        # Rearrange: n = ln(2n) + 1
+        # e^n = 2n e^1
+        # e^{n-1} = 2n
+        # e^{n-1} / n = 2
+        # Multiply both sides by e^{-n}: e^{n-1} e^{-n} / n = 2 e^{-n}
+        # Better form: From n e^{-n} = 2 e^{-1}
+        # -n e^{-n} = -2 e^{-1}
+        # Use W: n = -W(-2 e^{-1})
         n_sym = symbols('n', positive=True, real=True)
-        eq = Eq(n_sym - 1, ln(2 * n_sym))
-        try:
-            n_exact = float(nsolve(eq, n_sym, 2.5))
-        except:
-            print("Symbolic solve failed; using analytical approximation")
+        # Principal branch
+        sol_principal = -LambertW(-2 * exp(-1))
+        # Branch -1 (though for positive n, principal is relevant)
+        sol_branch1 = -LambertW(-2 * exp(-1), -1)
+        # Evaluate numerically and select positive real solution
+        n_exact_candidates = [float(N(sol_principal)), float(N(sol_branch1))]
+        n_exact = next((cand for cand in n_exact_candidates if cand > 0 and abs(stability_eq(cand)) < 1e-6), None)
+        if n_exact is None:
+            print("Lambert W solution failed; using analytical approximation")
             n_exact = 2.678347  # Known approximate value
     
     n_min = int(np.ceil(n_exact))
@@ -110,6 +123,7 @@ print(f"\nNatural Units: c = {c_natural}, h = {h_natural:.1f} (exactly {I}×2π)
 print(f"\n🌟 PROFOUND INSIGHT: I = c = 24 🌟")
 print(f"I = {I}, c = {c_natural} (Unity: {I == c_natural})")
 print("Meaning: Speed limit = information processing rate")
+print("\n*** EMPHATIC STATEMENT: The cosmic speed limit c is identically the fundamental information content I of the universe's minimal knot structure - a profound unity revealing that reality's propagation bound is its own informational capacity! ***")
 
 # Simple visual for I = c unity
 def plot_information_speed_unity():
@@ -192,10 +206,11 @@ print(f"\nValidation: Comparison to Known Constants")
 print(f"α_info = {ratios['α_info']:.6f} ~ α_fine = {1/137:.6f} (same order)")
 print(f"h/I = {ratios['h/I']:.3f} == 2π = {float(N(2*pi)):.3f} (exact)")
 
-# Symbolic assertion for key ratios
+# Three key symbolic assertions
 assert abs(ratios['h/I'] - float(N(2*pi))) < 1e-10, "h/I != 2π assertion failed"
 assert ratios['c/R'] == 3, "c/R != 3 assertion failed"
-print("✓ Key ratio assertions passed")
+assert I == c_natural, "I != c assertion failed"
+print("✓ Three key assertions passed: h/I == 2π, c/R == 3, I == c")
 
 # Physics validation tests (reduced)
 print(f"\nValidation: Universal Physics in Natural Units")
@@ -337,7 +352,7 @@ def plot_complete_framework():
 
 plot_complete_framework()
 
-# Final summary (reduced verbosity)
+# Final summary
 print(f"\n🌟 Fundamental Discoveries:")
 print(f"1. c = I = {c_natural} (speed = information rate)")
 print(f"2. h/I = {ratios['h/I']:.3f} = 2π exactly")
