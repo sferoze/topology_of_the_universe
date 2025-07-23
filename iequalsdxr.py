@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 from sympy import symbols, pi, sqrt, ln, exp, solve, diff, N, simplify, integrate, Rational, Eq, nsolve, LambertW
 from scipy.optimize import fsolve, minimize_scalar
@@ -7,10 +8,10 @@ import os
 # Create output directory for plots
 os.makedirs('framework_plots', exist_ok=True)
 
-print("="*80)
+print("=" * 80)
 print("ULTIMATE UNIFIED FRAMEWORK: DIMENSIONLESS RATIOS FROM I = D × R")
 print("The Complete Theory of Everything from Information Topology")
-print("="*80)
+print("=" * 80)
 
 # Core Derivation: Minimal Knot from Stability with Enhanced Error Handling
 def derive_minimal_knot(plot=True):
@@ -29,7 +30,7 @@ def derive_minimal_knot(plot=True):
             n_exact = fsolve(stability_eq, guess, xtol=1e-10)[0]
             if abs(stability_eq(n_exact)) < 1e-9:
                 break
-        except:
+        except Exception:
             continue
     
     # Symbolic fallback using Lambert W for true symbolic solution
@@ -56,7 +57,7 @@ def derive_minimal_knot(plot=True):
             print("Lambert W solution failed; using analytical approximation")
             n_exact = 2.678347  # Known approximate value
     
-    n_min = int(np.ceil(n_exact))
+    n_min = math.ceil(n_exact)  # Use math.ceil for precision
     
     # Symbolic calculation for exact I_knot
     n_sym = symbols('n', positive=True, integer=True)
@@ -72,7 +73,7 @@ def derive_minimal_knot(plot=True):
     if plot:
         x_vals = np.linspace(1, 5, 100)
         stability = x_vals - 1 - np.log(2 * x_vals)
-        plt.figure(figsize=(8, 6), constrained_layout=True)  # Added constrained_layout=True
+        plt.figure(figsize=(8, 6))
         plt.plot(x_vals, stability, 'b-', linewidth=2, label='(n-1) - ln(2n)')
         plt.axhline(0, color='r', linestyle='--', alpha=0.7, label='Stability threshold')
         plt.axvline(n_exact, color='orange', linestyle=':', label=f'Exact: n={n_exact:.3f}')
@@ -84,7 +85,7 @@ def derive_minimal_knot(plot=True):
         plt.ylabel('Stability Metric', fontsize=12)
         plt.legend()
         plt.grid(True, alpha=0.3)
-        # plt.tight_layout()  # Remove this line
+        plt.tight_layout()
         plt.savefig('framework_plots/knot_stability.png', dpi=150)
         plt.close()
 
@@ -225,7 +226,8 @@ print(f"Uncertainty: ΔxΔp = {Delta_x * Delta_p:.1f} ≥ h/2 = {h_natural/2:.1f
 # Create comprehensive visualizations with creative heatmap
 def plot_complete_framework():
     """Create the ultimate visualization of the framework, with ratio heatmap."""
-    fig = plt.figure(figsize=(16, 12), constrained_layout=True)
+    fig = plt.figure(figsize=(16, 12))
+    fig.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05, wspace=0.3, hspace=0.3)
     gs = fig.add_gridspec(3, 3)
     
     # 1. I = c spectrum
@@ -344,8 +346,8 @@ def plot_complete_framework():
     ax6.plot(D, R, 'r*', markersize=15, label='Our Universe')
     ax6.legend()
     
-    plt.suptitle('The Complete Unified Framework: From I = D × R to All Physics', 
-                 fontsize=18, weight='bold')
+    plt.title('The Complete Unified Framework: From I = D × R to All Physics', 
+                 fontsize=14, weight='bold')
     plt.savefig('framework_plots/complete_framework.png', dpi=150, bbox_inches='tight')
     plt.close()
 
