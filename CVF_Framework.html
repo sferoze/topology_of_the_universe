@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Chiral Void Framework - Enhanced Visualization</title>
+    
+    <!-- External Libraries -->
+    <!-- Using Three.js (r158) and OrbitControls for 3D visualization -->
+    <!-- ADD this: -->
+    <!-- Three.js (global build) + OrbitControls (global attaches to THREE) -->
+
+    <!-- Chart.js + annotation plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #050510;
+            --text-color: #e0e0e0;
+            --primary-color: #00ffff; /* Cyan */
+            --secondary-color: #ff00ff; /* Magenta */
+            --accent-color: #4d00ff; /* Purple */
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 0; line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(145deg, #1a1a2e, #0a0a1a);
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 4px 20px rgba(77, 0, 255, 0.3);
+        }
+        h1 {
+            font-size: 3em;
+            margin: 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+        .subtitle { font-size: 1.2em; color: #aaaaaa; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .section {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 50px;
+            border: 1px solid rgba(77, 0, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        .visualization-container {
+            width: 100%;
+            height: 450px;
+            background-color: #000000;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .calculation-display {
+            font-family: 'Courier New', monospace;
+            background-color: #111111;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            margin: 20px 0;
+            font-size: 1.1em;
+            overflow-x: auto;
+        }
+        .formula { color: var(--secondary-color); }
+        .result { color: #00ff00; font-weight: bold; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1a1a2e;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .label {
+            font-size: 0.9em;
+            color: #aaaaaa;
+            text-transform: uppercase;
+        }
+        #emergence-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover { background-color: #6600ff; }
+        .button:disabled { background-color: #333; cursor: not-allowed; }
+        .info-box {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>The Chiral Void Framework (CVF)</h1>
+        <div class="subtitle">A First-Principles Reconstruction of Physics from Arithmetic Topology</div>
+    </div>
+
+    <div class="container">
+
+        <!-- Section 1: The Emergence Chain (Interactive Visualization) -->
+        <div class="section">
+            <h2>1. The Emergence Chain: From Void to Structure</h2>
+            <p>Interactive visualization of the necessary cosmogenesis (Figure 1): The instability of the absolute void forces topological distinction (folds and creases), which aggregate into the stable primordial constraint.</p>
+            <div class="visualization-container" id="emergence-visualization"></div>
+            <div id="emergence-controls">
+                <button class="button" id="btn-void">1. Void (Unstable)</button>
+                <button class="button" id="btn-fold">2. Fold (Distinction)</button>
+                <button class="button" id="btn-crease">3. Crease (Constraint)</button>
+                <button class="button" id="btn-knot">4. Knot (Stable Structure)</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Stability and Dimensionality -->
+        <div class="section">
+            <h2>2. Stability, Dimensionality (D=3), and Tension (δ)</h2>
+            <p>Physical reality requires Relational Gain G(n) to balance Entropic Cost C(n). This uniquely determines the critical threshold n* ≈ 2.6783, forcing D=3.</p>
+            
+            <div class="visualization-container" style="height: 400px;">
+                 <canvas id="stability-chart"></canvas>
+            </div>
+            <div class="calculation-display">
+                <div><span class="formula">n* = -W₋₁(-1/2e)</span> = <span class="result" id="nstar-value"></span></div>
+                <div><span class="formula">δ = D - n*</span> = <span class="result" id="delta-value"></span></div>
+            </div>
+             <div class="info-box">
+                The tension (δ) between the ideal continuous dimension (n*) and the realized discrete dimension (D=3) drives all dynamics, giving rise to Quantum Mechanics.
+            </div>
+        </div>
+
+        <!-- Section 3: The Primordial Constraint -->
+        <div class="section">
+            <h2>3. The Primordial Constraint: Figure-8 Knot (K4₁)</h2>
+            <p>The unique minimal, achiral, hyperbolic, and arithmetic knot. Its geometry defines the Information Primitives (I=24, R=8, D=3).</p>
+            <div class="visualization-container" id="knot-visualization"></div>
+             <div class="grid" style="margin-top: 20px;">
+                <div class="card">
+                    <span class="label">Information Layer (I)</span>
+                    <span class="metric">24</span>
+                </div>
+                <div class="card">
+                    <span class="label">Relational Capacity (R)</span>
+                    <span class="metric">8</span>
+                </div>
+                <div class="card">
+                    <span class="label">Compression Ratio</span>
+                    <span class="metric">2024</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Derivation of Constants -->
+        <div class="section">
+            <h2>4. Derivation of Fundamental Constants</h2>
+            <div class="grid">
+                <div>
+                    <h3>Fine Structure Constant (α⁻¹)</h3>
+                    <div class="calculation-display">
+                        <div><span class="formula">α⁻¹ = (I×D) + (R×R) + 1 + ΔC</span></div>
+                        <div>Discrete: (72) + (64) + 1 = 137</div>
+                        <div>Correction ΔC = (δ×n*)/I:</div>
+                        <div class="result" id="deltac-value"></div>
+                        <div>Physical α⁻¹:</div>
+                        <div class="result" id="alpha-inv-value"></div>
+                    </div>
+                </div>
+                <div>
+                    <h3>Gravitational Constant (Topological, G_T)</h3>
+                     <div class="calculation-display">
+                        <div><span class="formula">G_T = (1/I) * exp(-Vol(K4₁)/D)</span></div>
+                        <div>Vol(K4₁) ≈ 2.02988...</div>
+                        <div>G_T = (1/24) * exp(-2.02988.../3)</div>
+                        <div>Physical G_T:</div>
+                        <div class="result" id="gt-value"></div>
+                    </div>
+                </div>
+            </div>
+             <div class="info-box">
+                The derived α⁻¹ matches CODATA 2022 within 7.55 × 10⁻⁷, demonstrating the framework's precision with zero free parameters.
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+      }
+    }
+    </script>
+
+    <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // Register Chart.js annotation plugin (Chart.js v4)
+    if (window["chartjs-plugin-annotation"]) {
+      Chart.register(window["chartjs-plugin-annotation"]);
+    }
+
+    // ---- Constants / numbers (as in your code) ----
+    const CVF = {
+      N_STAR: 2.67834699001666065341,
+      D: 3,
+      DELTA: 0.32165300998333934659,
+      I: 24,
+      VOL_K4_1: 2.02988321281930725,
+      DELTA_C: 0.03589576546327815993,
+      ALPHA_INV: 137.03589576546327815993,
+    };
+    CVF.G_T = (1 / CVF.I) * Math.exp(-CVF.VOL_K4_1 / CVF.D);
+
+    // Display numbers
+    document.getElementById('nstar-value').textContent = CVF.N_STAR.toFixed(20);
+    document.getElementById('delta-value').textContent = CVF.DELTA.toFixed(20);
+    document.getElementById('deltac-value').textContent = CVF.DELTA_C.toFixed(20);
+    document.getElementById('alpha-inv-value').textContent = CVF.ALPHA_INV.toFixed(20);
+    document.getElementById('gt-value').textContent = CVF.G_T.toFixed(15);
+
+    // ---- Chart ----
+    function initStabilityChart() {
+      const ctx = document.getElementById('stability-chart').getContext('2d');
+      const nValues = [], gValues = [], cValues = [];
+      for (let n = 1; n <= 4; n += 0.02) {
+        nValues.push(n);
+        gValues.push(n - 1);
+        cValues.push(Math.log(2 * n));
+      }
+      const valueAtNStar = CVF.N_STAR - 1;
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: nValues,
+          datasets: [
+            { label: 'G(n) = n - 1', data: gValues, borderColor: '#00ffff', borderWidth: 2, tension: 0.1, pointRadius: 0 },
+            { label: 'C(n) = ln(2n)', data: cValues, borderColor: '#ff00ff', borderWidth: 2, tension: 0.1, pointRadius: 0 },
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#fff' } },
+            annotation: {
+              annotations: {
+                nStarPoint: {
+                  type: 'point', xValue: CVF.N_STAR, yValue: valueAtNStar,
+                  backgroundColor: '#ffff00', radius: 6,
+                  label: { content: 'n*', enabled: true, position: 'start', backgroundColor: '#ffff00', color: '#000' }
+                },
+                dLine: {
+                  type: 'line', xMin: 3, xMax: 3, borderColor: 'rgba(0,255,0,0.7)', borderWidth: 2,
+                  label: { content: 'D=3', enabled: true, position: 'end', backgroundColor: 'rgba(0,255,0,0.7)' }
+                },
+                deltaRegion: {
+                  type: 'box', xMin: CVF.N_STAR, xMax: 3, yMin: 0, yMax: 3,
+                  backgroundColor: 'rgba(255,255,0,0.1)', borderColor: 'rgba(255,255,0,0.3)'
+                }
+              }
+            }
+          },
+          scales: {
+            x: { type: 'linear', title: { display: true, text: 'Dimensionality (n)', color: '#fff' }, ticks: { color: '#aaa' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+            y: { title: { display: true, text: 'Gain / Cost', color: '#fff' }, ticks: { color: '#aaa' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+          }
+        }
+      });
+    }
+
+    // ---- Geometry ----
+    class FigureEightKnot extends THREE.Curve {
+      constructor(scale = 1) { super(); this.scale = scale; }
+      getPoint(t, target = new THREE.Vector3()) {
+        const theta = 2 * Math.PI * t, c = Math.cos, s = Math.sin;
+        const x = (2 + c(2 * theta)) * c(3 * theta);
+        const y = (2 + c(2 * theta)) * s(3 * theta);
+        const z = s(4 * theta);
+        return target.set(x, y, z).multiplyScalar(this.scale);
+      }
+    }
+
+    // ---- K4_1 visualization ----
+    function initKnotVisualization() {
+      const container = document.getElementById('knot-visualization');
+      const width = container.clientWidth, height = container.clientHeight;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.z = 7;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
+      container.appendChild(renderer.domElement);
+
+      const path = new FigureEightKnot(0.8);
+      const geometry = new THREE.TubeGeometry(path, 256, 0.15, 16, true);
+      const material = new THREE.MeshPhongMaterial({ color: 0x4d00ff, emissive: 0x110033, specular: 0x00ffff, shininess: 100 });
+      const knot = new THREE.Mesh(geometry, material);
+      scene.add(knot);
+
+      scene.add(new THREE.AmbientLight(0x333333));
+      const p1 = new THREE.PointLight(0x00ffff, 3, 50); p1.position.set(5, 5, 5); scene.add(p1);
+      const p2 = new THREE.PointLight(0xff00ff, 3, 50); p2.position.set(-5, -5, -5); scene.add(p2);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; controls.dampingFactor = 0.05;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        knot.rotation.y += 0.002;
+        knot.rotation.x += 0.001;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        const w = container.clientWidth, h = container.clientHeight;
+        camera.aspect = w / h; camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+    }
+
+    // ---- Emergence visualization ----
+    function initEmergenceVisualization() {
+      const container = document.getElementById('emergence-visualization');
+      const width = container.clientWidth, height = container.clientHeight;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+      camera.position.z = 5;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
+      container.appendChild(renderer.domElement);
+
+      const voidSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(2, 32, 32),
+        new THREE.MeshBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.1, wireframe: true })
+      );
+      scene.add(voidSphere);
+
+      const foldGeom = new THREE.PlaneGeometry(4, 4, 32, 32);
+      const foldPlane = new THREE.Mesh(
+        foldGeom,
+        new THREE.MeshPhongMaterial({ color: 0x00ffff, side: THREE.DoubleSide, transparent: true, opacity: 0.7 })
+      );
+      foldPlane.visible = false; scene.add(foldPlane);
+
+      const creasePoints = [new THREE.Vector3(0, -1.5, 0), new THREE.Vector3(0, 1.5, 0)];
+      const creaseLine = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(creasePoints),
+        new THREE.LineBasicMaterial({ color: 0xff0000 })
+      );
+      creaseLine.visible = false; scene.add(creaseLine);
+
+      const knotPath = new FigureEightKnot(0.8);
+      const knotMesh = new THREE.Mesh(
+        new THREE.TubeGeometry(knotPath, 128, 0.1, 8, true),
+        new THREE.MeshPhongMaterial({ color: 0x4d00ff, shininess: 50 })
+      );
+      knotMesh.visible = false; scene.add(knotMesh);
+
+      const light = new THREE.DirectionalLight(0xffffff, 3); light.position.set(1, 1, 5); scene.add(light);
+      scene.add(new THREE.AmbientLight(0x404040));
+
+      let currentState = 'void';
+      const buttons = {
+        void: document.getElementById('btn-void'),
+        fold: document.getElementById('btn-fold'),
+        crease: document.getElementById('btn-crease'),
+        knot: document.getElementById('btn-knot')
+      };
+
+      function setState(state) {
+        currentState = state;
+        voidSphere.visible = (state === 'void');
+        foldPlane.visible = (state === 'fold' || state === 'crease');
+        creaseLine.visible = (state === 'crease');
+        knotMesh.visible = (state === 'knot');
+
+        if (state === 'fold' || state === 'void') {
+          const vertices = foldPlane.geometry.attributes.position.array;
+          for (let i = 2; i < vertices.length; i += 3) vertices[i] = 0;
+          foldPlane.geometry.attributes.position.needsUpdate = true;
+        }
+        for (const key in buttons) buttons[key].disabled = (key === state);
+      }
+
+      buttons.void.addEventListener('click', () => setState('void'));
+      buttons.fold.addEventListener('click', () => setState('fold'));
+      buttons.crease.addEventListener('click', () => setState('crease'));
+      buttons.knot.addEventListener('click', () => setState('knot'));
+      setState('void');
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const time = Date.now() * 0.001;
+
+        if (currentState === 'void') {
+          const scale = 1 + 0.05 * Math.sin(time * 5);
+          voidSphere.scale.set(scale, scale, scale);
+          voidSphere.rotation.y += 0.005;
+        }
+        if (currentState === 'fold' || currentState === 'crease') {
+          const vertices = foldPlane.geometry.attributes.position.array;
+          const foldProgress = (currentState === 'fold') ? (Math.sin(time * 2) + 1) / 2 : 1;
+          for (let i = 0; i < vertices.length; i += 3) {
+            const x = vertices[i];
+            vertices[i + 2] = foldProgress * Math.abs(x) * -1.5;
+          }
+          foldPlane.geometry.attributes.position.needsUpdate = true;
+          foldPlane.geometry.computeVertexNormals();
+        }
+        if (currentState === 'crease') {
+          const intensity = 0.8 + 0.2 * Math.sin(time * 10);
+          creaseLine.material.color.setRGB(intensity, 0, 0);
+        }
+        if (currentState === 'knot') {
+          knotMesh.rotation.x += 0.005;
+          knotMesh.rotation.y += 0.005;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        const w = container.clientWidth, h = container.clientHeight;
+        camera.aspect = w / h; camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+    }
+
+    // Start everything
+    window.addEventListener('load', () => {
+      initEmergenceVisualization();
+      initStabilityChart();
+      initKnotVisualization();
+    });
+    </script>
+
+</body>
+</html>
