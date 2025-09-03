@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figure-Eight Knot Complement - Mathematical Structure</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0a0015;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+        
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        #viz-area {
+            flex: 1;
+            position: relative;
+        }
+        
+        #info-panel {
+            width: 350px;
+            background: rgba(0, 0, 40, 0.95);
+            padding: 25px;
+            overflow-y: auto;
+            border-left: 2px solid #00ffcc;
+        }
+        
+        h1 {
+            color: #00ffcc;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            color: #ff00aa;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .formula-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #00ffcc;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 40, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00ffcc;
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background: #4422cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #5533dd;
+        }
+        
+        button.active {
+            background: #00ffcc;
+            color: #000;
+        }
+        
+        #schematic-view {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 40, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ff00aa;
+            display: none;
+        }
+        
+        .face-diagram {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .glue-arrow {
+            color: #ffd700;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="viz-area">
+            <canvas id="canvas"></canvas>
+            
+            <div id="controls">
+                <h3 style="color: #00ffcc; margin: 0 0 10px 0; font-size: 14px;">View Options</h3>
+                <button id="show-knot">Figure-8 Knot</button>
+                <button id="show-cusp">Cusp Structure</button>
+                <button id="toggle-rotation">Auto Rotate</button>
+            </div>
+            
+            <div id="schematic-view">
+                <h3 style="color: #ff00aa; margin: 0 0 10px 0; font-size: 14px;">Face Gluing Pattern</h3>
+                <div style="text-align: center;">
+                    <div class="face-diagram" style="background: rgba(255, 100, 50, 0.3);">T1 Face 0</div>
+                    <span class="glue-arrow">→</span>
+                    <div class="face-diagram" style="background: rgba(50, 255, 100, 0.3);">T2 Face 2</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="face-diagram" style="background: rgba(255, 100, 50, 0.3);">T1 Face 1</div>
+                    <span class="glue-arrow">→</span>
+                    <div class="face-diagram" style="background: rgba(50, 255, 100, 0.3);">T2 Face 3</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="face-diagram" style="background: rgba(255, 100, 50, 0.3);">T1 Face 2</div>
+                    <span class="glue-arrow">→</span>
+                    <div class="face-diagram" style="background: rgba(50, 255, 100, 0.3);">T2 Face 0</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="face-diagram" style="background: rgba(255, 100, 50, 0.3);">T1 Face 3</div>
+                    <span class="glue-arrow">→</span>
+                    <div class="face-diagram" style="background: rgba(50, 255, 100, 0.3);">T2 Face 1</div>
+                </div>
+                <p style="color: #88aacc; font-size: 11px; margin-top: 10px;">
+                    Each gluing includes a twist that creates the hyperbolic structure
+                </p>
+            </div>
+        </div>
+        
+        <div id="info-panel">
+            <h1>Understanding the Knot Complement</h1>
+            
+            <p>What we're visualizing here exists in hyperbolic 3-space, which cannot be perfectly shown on a flat screen. Think of this as a "shadow" or projection of the true structure.</p>
+            
+            <h2>The Key Insight</h2>
+            <p>The space around the figure-eight knot (not the knot itself) has a special structure that can be built from exactly two tetrahedra. But these aren't ordinary tetrahedra - they're "ideal" with vertices at infinity.</p>
+            
+            <h2>Why We Can't Show It Perfectly</h2>
+            <p>In hyperbolic geometry, parallel lines diverge, triangles have angles that sum to less than 180°, and space itself curves negatively everywhere. Our screens show Euclidean (flat) space, so any visualization is necessarily a compromise.</p>
+            
+            <h2>What The Structure Really Is</h2>
+            <div class="formula-box">
+                • 2 ideal tetrahedra<br>
+                • 8 triangular faces total<br>
+                • Glued in pairs with twists<br>
+                • Creates one "cusp" at infinity<br>
+                • Volume = <span class="highlight">2.029883...</span>
+            </div>
+            
+            <h2>The UTF Connection</h2>
+            <p>This minimal structure, emerging from pure topology, encodes:</p>
+            <div class="formula-box">
+                8 faces × 3 dimensions = 24D info space<br>
+                → C_M = 137 (fine structure)<br>
+                → All from n - 1 = ln(2n)
+            </div>
+            
+            <h2>What You're Seeing</h2>
+            <p>The <span class="highlight">blue curve</span> is the figure-eight knot. The important part is the space around it - imagine drilling this knot-shaped tunnel out of the universe. What remains has this remarkable two-tetrahedra structure, but in hyperbolic geometry where the tetrahedra extend infinitely toward their vertices.</p>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <script>
+        // Scene setup
+        let scene, camera, renderer, controls;
+        let figureEightKnot, cuspTorus;
+        let currentView = 'knot';
+        let autoRotate = true;
+        
+        // Figure-Eight Knot parametric curve
+        class FigureEightKnotCurve extends THREE.Curve {
+            constructor(scale = 1) {
+                super();
+                this.scale = scale;
+            }
+            
+            getPoint(t, optionalTarget = new THREE.Vector3()) {
+                const theta = t * Math.PI * 2;
+                const x = (2 + Math.cos(2 * theta)) * Math.cos(3 * theta);
+                const y = (2 + Math.cos(2 * theta)) * Math.sin(3 * theta);
+                const z = Math.sin(4 * theta);
+                return optionalTarget.set(x, y, z).multiplyScalar(this.scale);
+            }
+        }
+        
+        function init() {
+            // Basic Three.js setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0015);
+            
+            const canvas = document.getElementById('canvas');
+            const width = window.innerWidth - 350;
+            const height = window.innerHeight;
+            
+            camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+            camera.position.set(10, 8, 12);
+            
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = autoRotate;
+            controls.autoRotateSpeed = 0.5;
+            
+            // Lighting - keep it simple but effective
+            const ambientLight = new THREE.AmbientLight(0x404060, 0.8);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 5);
+            scene.add(directionalLight);
+            
+            createFigureEightKnot();
+            createCuspVisualization();
+            setupControls();
+            
+            window.addEventListener('resize', onWindowResize);
+        }
+        
+        function createFigureEightKnot() {
+            // Create the knot as a tube
+            const knotCurve = new FigureEightKnotCurve(2.5);
+            const tubeGeometry = new THREE.TubeGeometry(knotCurve, 256, 0.2, 16, true);
+            
+            // Use a simple but clear material
+            const knotMaterial = new THREE.MeshPhongMaterial({
+                color: 0x4488ff,
+                shininess: 100,
+                specular: 0x222244
+            });
+            
+            figureEightKnot = new THREE.Mesh(tubeGeometry, knotMaterial);
+            scene.add(figureEightKnot);
+            
+            // Add a subtle wireframe for structure visibility
+            const wireframe = new THREE.WireframeGeometry(tubeGeometry);
+            const wireMaterial = new THREE.LineBasicMaterial({ 
+                color: 0x88ccff, 
+                transparent: true, 
+                opacity: 0.1 
+            });
+            const wireframeMesh = new THREE.LineSegments(wireframe, wireMaterial);
+            figureEightKnot.add(wireframeMesh);
+        }
+        
+        function createCuspVisualization() {
+            // Create a torus to represent the cusp neighborhood
+            // In the actual hyperbolic structure, this extends to infinity
+            const torusGeometry = new THREE.TorusGeometry(3, 1.5, 8, 32);
+            const torusMaterial = new THREE.MeshPhongMaterial({
+                color: 0xff00aa,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+            
+            cuspTorus = new THREE.Mesh(torusGeometry, torusMaterial);
+            cuspTorus.visible = false;
+            scene.add(cuspTorus);
+            
+            // Add wireframe to show the structure
+            const torusWireframe = new THREE.WireframeGeometry(torusGeometry);
+            const torusWireMaterial = new THREE.LineBasicMaterial({ 
+                color: 0xff00aa, 
+                transparent: true, 
+                opacity: 0.5 
+            });
+            const torusWireframeMesh = new THREE.LineSegments(torusWireframe, torusWireMaterial);
+            cuspTorus.add(torusWireframeMesh);
+        }
+        
+        function setupControls() {
+            document.getElementById('show-knot').addEventListener('click', function() {
+                currentView = 'knot';
+                updateView();
+            });
+            
+            document.getElementById('show-cusp').addEventListener('click', function() {
+                currentView = 'cusp';
+                updateView();
+            });
+            
+            document.getElementById('toggle-rotation').addEventListener('click', function() {
+                autoRotate = !autoRotate;
+                controls.autoRotate = autoRotate;
+                this.classList.toggle('active', autoRotate);
+            });
+            
+            // Set initial state
+            updateView();
+        }
+        
+        function updateView() {
+            // Reset all buttons
+            document.querySelectorAll('#controls button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Update visibility and active states
+            if (currentView === 'knot') {
+                figureEightKnot.visible = true;
+                cuspTorus.visible = false;
+                document.getElementById('show-knot').classList.add('active');
+                
+            } else if (currentView === 'cusp') {
+                figureEightKnot.visible = true;
+                cuspTorus.visible = true;
+                document.getElementById('show-cusp').classList.add('active');
+            }
+            
+            // Keep rotation button state
+            document.getElementById('toggle-rotation').classList.toggle('active', autoRotate);
+        }
+        
+        function onWindowResize() {
+            const width = window.innerWidth - 350;
+            const height = window.innerHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            
+            // Subtle floating animation for the knot
+            if (figureEightKnot) {
+                figureEightKnot.position.y = Math.sin(Date.now() * 0.0005) * 0.2;
+            }
+            
+            // Rotate the cusp torus differently to show its relationship
+            if (cuspTorus && cuspTorus.visible) {
+                cuspTorus.rotation.x += 0.003;
+                cuspTorus.rotation.z += 0.002;
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Start everything
+        init();
+        animate();
+    </script>
+</body>
+</html>
